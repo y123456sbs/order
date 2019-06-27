@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="WARN" monitorInterval="30">
+
+        <Properties>
+            <Property name="LOG_PATTERN">
+                %d{yyyy-MM-dd HH:mm:ss} %l - %msg%n
+            </Property>
+        </Properties>
+
+        <Appenders>
+
+            <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+                <PatternLayout pattern="${LOG_PATTERN}"/>
+            </Console>
+
+            <RollingFile name="InfoRollingFile"
+                         fileName="logs/info/infoabc.log"
+                         filePattern="logs/info/%d{yyyy-MM-dd}/info/%d{yyyy-MM-dd}-%i.info.log.gz">
+                <PatternLayout pattern="${LOG_PATTERN}"/>
+
+                <Filters>
+                    <ThresholdFilter level="INFO"/>
+                    <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                </Filters>
+
+                <Policies>
+                    <SizeBasedTriggeringPolicy size="1KB"/>
+                </Policies>
+
+                <DefaultRolloverStrategy max="88888888"/>
+            </RollingFile>
+
+            <RollingFile name="DebugRollingFile"
+                         fileName="logs/info/infoabc.log"
+                         filePattern="logs/info/%d{yyyy-MM-dd}/info/%d{yyyy-MM-dd}-%i.info.log.gz">
+                <PatternLayout pattern="${LOG_PATTERN}"/>
+
+                <Filters>
+                    <ThresholdFilter level="DEBUG"/>
+                    <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+                </Filters>
+
+                <Policies>
+                    <SizeBasedTriggeringPolicy size="1KB"/>
+                </Policies>
+
+                <DefaultRolloverStrategy max="88888888"/>
+            </RollingFile>
+
+                <RollingFile name="WarnRollingFile"
+                             fileName="logs/info/infoabc.log"
+                             filePattern="logs/info/%d{yyyy-MM-dd}/info/%d{yyyy-MM-dd}-%i.info.log.gz">
+
+                    <PatternLayout pattern="${LOG_PATTERN}"/>
+
+                    <Filters>
+                <ThresholdFilter level="WARN"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+
+                    <Policies>
+                <SizeBasedTriggeringPolicy size="1KB"/>
+            </Policies>
+
+                    <DefaultRolloverStrategy max="88888888"/>
+                </RollingFile>
+
+                <RollingFile name="ErrorRollingFile"
+                             fileName="logs/info/infoabc.log"
+                             filePattern="logs/info/%d{yyyy-MM-dd}/info/%d{yyyy-MM-dd}-%i.info.log.gz">
+
+                    <PatternLayout pattern="${LOG_PATTERN}"/>
+
+                    <Filters>
+                <ThresholdFilter level="ERROR"/>
+                <ThresholdFilter level="FATAL" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+
+                    <Policies>
+                <SizeBasedTriggeringPolicy size="1KB"/>
+            </Policies>
+
+                    <DefaultRolloverStrategy max="88888888"/>
+                </RollingFile>
+            </Appenders>
+
+            <Loggers>
+
+        <Logger name="com.example.t_log4j2.TTest" level="debug" additivity="false">
+                <AppenderRef ref="ConsoleAppender" />
+                <AppenderRef ref="InfoRollingFile"/>
+                <AppenderRef ref="DebugRollingFile"/>
+                <AppenderRef ref="WarnRollingFile"/>
+                <AppenderRef ref="ErrorRollingFile"/>
+            </Logger>
+
+        <Root level="debug">
+                <AppenderRef ref="ConsoleAppender" />
+                <AppenderRef ref="InfoRollingFile"/>
+                <AppenderRef ref="DebugRollingFile"/>
+                <AppenderRef ref="WarnRollingFile"/>
+                <AppenderRef ref="ErrorRollingFile"/>
+            </Root>
+    </Loggers>
+
+</Configuration>
