@@ -71,5 +71,8 @@ public class LotteryController {
             return new Result(false, StatusCode.ERROR, "第"+period+"期开奖失败");
         }
 
+
+
+
     }
 }

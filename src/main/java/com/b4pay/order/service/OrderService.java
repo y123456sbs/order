@@ -57,7 +57,7 @@ public class OrderService {
      * 添加
      */
     @Transactional
-    public void add(Order order) {
+    public void add(Order order,Date date) {
         //设置id
         order.setId(idWorker.nextId() + "");
 
@@ -86,7 +86,7 @@ public class OrderService {
         BigDecimal money = new BigDecimal(nums*10);
 
         order.setMoney(money);
-        order.setCreateTime(new Date());
+        order.setCreateTime(date);
 
         orderDao.save(order);
     }
@@ -104,6 +104,39 @@ public class OrderService {
     @Transactional
     public void delete(String id) {
         orderDao.deleteById(id);
+    }
+
+
+    /**
+     * 查找是否当天重复下注
+     */
+    public Boolean findAll(String agencyId, Integer period,Date date) {
+        List<Order> orderList = orderDao.findAll(new Specification<Order>() {
+            @Override
+            public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                if (agencyId != null) {
+                    list.add(cb.equal(root.get("agencyId").as(String.class), agencyId));
+                }
+
+                if (period != null) {
+                    list.add(cb.equal(root.get("period").as(Integer.class), period));
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return cb.and(list.toArray(p));
+            }
+        });
+        for (Order order : orderList) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String orderDate = simpleDateFormat.format(order.getCreateTime());
+            String newOrderDate = simpleDateFormat.format(date);
+            if (orderDate.equals(newOrderDate)){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -127,6 +160,7 @@ public class OrderService {
                 return cb.and(list.toArray(p));
             }
         });
+
         return orderList;
     }
 
@@ -213,5 +247,10 @@ public class OrderService {
             count.setNumberSevenTotalMoney(numberSevenMoney);
             countDao.save(count);
         }
+    }
+
+    public List<Order> findByAgencyId(String agecncyId,Integer period) {
+        List<Order> orderList = orderDao.findByAgencyIdGreaterThanOrderByPeriodDesc(agecncyId,period);
+        return orderList;
     }
 }

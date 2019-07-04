@@ -1,5 +1,7 @@
 package com.b4pay.order.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -41,6 +43,10 @@ public class Order implements Serializable {
     private BigDecimal money; //下注金额
 
     private Date createTime;
+
+
+
+
 
     public Order() {
     }

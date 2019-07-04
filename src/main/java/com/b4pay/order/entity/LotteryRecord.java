@@ -1,5 +1,7 @@
 package com.b4pay.order.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -38,6 +40,7 @@ public class LotteryRecord {
 
     private BigDecimal totalMoney;
 
+    //@JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     public LotteryRecord() {

@@ -33,34 +33,36 @@ public class OrderController {
     private SimpleDateFormat simpleDateFormat;
 
     //下单
-    @RequestMapping(value = "/add",method = RequestMethod.POST)
-    public Result add(@RequestBody Order order){
-       try {
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public Result add(@RequestBody Order order) {
+        try {
             String agencyId = order.getAgencyId();
             Integer period = order.getPeriod();
-            List<Order> orderList = orderService.findAll(agencyId, period);
-            if (orderList != null && orderList.size()>0){
+            Date date = new Date();
+            boolean findOrder = orderService.findAll(agencyId, period,date);
+            if (findOrder){
+                orderService.add(order,date);
+                logger.info(simpleDateFormat.format(date) + " " + agencyId + "下单成功");
+                return new Result(true, StatusCode.OK, "下单成功");
+            } else {
                 return new Result(true, StatusCode.ERROR,"您当期已经下注,请勿重复下注");
             }
-            orderService.add(order);
-            logger.info(simpleDateFormat.format(new Date())+" "+agencyId+"下单成功");
-            return new Result(true, StatusCode.OK,"下单成功");
         } catch (Exception e) {
-            return new Result(false, StatusCode.ERROR,e.getMessage());
+            return new Result(false, StatusCode.ERROR, e.getMessage());
         }
     }
 
 
     //停止下注
-    @RequestMapping(value = "/stopAdd",method = RequestMethod.GET)
-    public Result stopAdd(Integer period){
+    @RequestMapping(value = "/stopAdd", method = RequestMethod.GET)
+    public Result stopAdd(Integer period) {
         try {
             orderService.countMoney(period);
-            logger.info(simpleDateFormat.format(new Date())+"停止下注成功");
-            return new Result(true, StatusCode.OK,"停止下注成功");
+            logger.info(simpleDateFormat.format(new Date()) + "停止下注成功");
+            return new Result(true, StatusCode.OK, "停止下注成功");
         } catch (Exception e) {
-            logger.error(simpleDateFormat.format(new Date())+"停止下注失败"+e.getMessage());
-            return new Result(false, StatusCode.ERROR,"停止下注失败");
+            logger.error(simpleDateFormat.format(new Date()) + "停止下注失败" + e.getMessage());
+            return new Result(false, StatusCode.ERROR, "停止下注失败");
         }
     }
 

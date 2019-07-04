@@ -7,7 +7,9 @@ import com.b4pay.order.dao.LotteryResultDao;
 import com.b4pay.order.entity.*;
 import com.b4pay.order.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -73,7 +75,7 @@ public class LotteryService {
         lotteryDao.save(lottery);
     }
 
-
+    @Transactional
     public void match(Integer period, List<Integer> numsList, List<Order> orderList, Date date) {
         Integer num1 = numsList.get(0);
         Integer num2 = numsList.get(1);
@@ -214,5 +216,21 @@ public class LotteryService {
     }
 
 
+    public List<Lottery> findAllOrderByPeriod() {
+        /*Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "period"));
+        List<Lottery> lotteryList = lotteryDao.findAll(sort);*/
+        List<Lottery> lotteryList = lotteryDao.findAllOrderByPeriodDesc();
+        return lotteryList;
+    }
+
+    public List<Lottery> findByDate(Date startDate,Date endDate) {
+        List<Lottery> lotteryList = lotteryDao.findAllBetweenStartAndEnd(startDate,endDate);
+        return lotteryList;
+    }
+
+    public Lottery findLattestLottery() {
+        Lottery lottery = lotteryDao.findLatterLottery();
+        return lottery;
+    }
 }
 
