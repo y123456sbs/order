@@ -45,7 +45,7 @@ public class OrderController {
                 logger.info(simpleDateFormat.format(date) + " " + agencyId + "下单成功");
                 return new Result(true, StatusCode.OK, "下单成功");
             } else {
-                return new Result(true, StatusCode.ERROR,"您当期已经下注,请勿重复下注");
+                return new Result(true, StatusCode.ERROR,"您当天已经下注,请勿重复下注");
             }
         } catch (Exception e) {
             return new Result(false, StatusCode.ERROR, e.getMessage());
